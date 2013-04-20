@@ -1,0 +1,8 @@
+div {
+  display: inline-block;
+  width: 108px;
+  height: 40px; }
+#css_inline_png { background: url(css.png) no-repeat; }
+#css_inline_jpg { background: url(css.jpg) no-repeat; }
+#css_inline_gif { background: url(css.gif) no-repeat; }
+#css_inline_svg { background: url(css.svg) no-repeat; }
