@@ -163,13 +163,14 @@ class Tiamat
     @format = "utf-8"
     @process = (code) =>
       $ = cheerio.load code
-      # console.log "[" + "html".blue + "] " + @path.basename().yellow if @verbose
+      console.log "[" + "html".blue + "] " + @path.basename().yellow if @verbose
       for tag in $("head link") when (src = tag.attribs.href)? # and !tag.attribs.extern?
         $(tag).replaceWith """<style type="text/css">#{@new_child "css", src}</style>"""
       for tag in $("script") when !tag.attribs.extern?
         src = (if tag.attribs.src? then tag.attribs.src else "inline:"+$(tag).html().trim())
         $(tag).attr("src",null)
-        $(tag).text(@new_child "js",src)
+        if tag.attribs.coffee? then $(tag).text(@new_child "coffee",src)
+        else $(tag).text(@new_child "js",src)
       for tag in $("img") when tag.attribs.src? and !tag.attribs.extern?
         $(tag).attr("src", @new_child "image", tag.attribs.src)
       @buffer = $.html()
@@ -207,10 +208,20 @@ class Tiamat
     util.print "J".yellow if @hashes
     @format = "utf-8"
     @process = (code) =>
-      if @suffix is "coffee"
-        code = coffee.compile code.toString("utf-8")
       code = uglifyjs(code,@js_opts).code.toString() if @compress unless @path.match /\.min\./
-      # console.log "[" + "js".blue + "] " + @path.basename().yellow if @verbose
+      console.log "[" + "js".blue + "] " + @path.basename().yellow if @verbose
+      @buffer = code
+      @child_ready()
+    return "XXX#{@id}XXX"
+
+  coffee : =>
+    @path = @path.replace /.js$/, '.coffee'
+    util.print "c".yellow if @hashes
+    @format = "utf-8"
+    @process = (code) =>
+      code = coffee.compile code.toString("utf-8")
+      code = uglifyjs(code,@js_opts).code.toString() if @compress unless @path.match /\.min\./
+      console.log "[" + "coffee".blue + "] " + @path.basename().yellow if @verbose
       @buffer = code
       @child_ready()
     return "XXX#{@id}XXX"
@@ -246,7 +257,7 @@ class Tiamat
       console.warn "[#{"MISSING".red}] #{@child[k].path.yellow}" if @warn_missing
       delete @child[k]
     for k,v of @child when !v.is_ready                 # abort unless no more open childs
-      return ( console.log "still waiting for #{v.path.red}" if @parent.top? )
+      return # ( console.log "still waiting for #{v.path.red}" if @parent.top? )
     @result = @buffer.toString()
     if Object.keys(@child).length > 0
       util.print (if @hashes then " " else "") + "[" + "assemble".yellow + ":" + @path.blue + "]" + (if @verbose then "\n" else "") if @verbose or @hashes
