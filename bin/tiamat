@@ -1,3 +1,0 @@
-#!/usr/bin/env node
-coffee = require('coffee-script')
-htx = require('../src/htx.coffee').cli(process.argv)

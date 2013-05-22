@@ -1,7 +1,8 @@
+#!/usr/bin/env node
 
 /*
 
-  main.js - coffeescript wrapper for htx
+  htx - commandline entry point of htx
   
   c) 2013 Sebastian Glaser <anx@ulzq.de>
 
@@ -27,4 +28,4 @@
 */
 
 coffee = require('coffee-script')
-module.exports = require('./htx.coffee').create
+htx = require('../src/htx.coffee').cli(process.argv)
