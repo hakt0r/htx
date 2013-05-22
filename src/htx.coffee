@@ -1,7 +1,7 @@
 #!/usr/bin/env coffee
 
 ###
-  Tiamat - Website/WebApp Inliner/Compressor
+  htx - Website/WebApp Inliner/Compressor
   c) 2013 anx<xmpp>ulzq - GNU GPLv3 - No warranty!
 ###
 
@@ -23,7 +23,7 @@ sha512    = (data) -> crypto.createHash('sha512').update(data).digest("hex")
 String::basename = -> return this.split('/').pop()
 UA_CHROME = "Mozilla/5.0 (X11; Linux i686) AppleWebKit/537.31 (KHTML, like Gecko) Chrome/26.0.1410.43 Safari/537.31"
 
-class Tiamat
+class htx
   @count  = 0
   @byPath = {}
   
@@ -47,13 +47,13 @@ class Tiamat
     if @verbose or @hashes
       util.print "[" + "compile".blue + "] " + @template.yellow + " -> " +
         @dest.yellow + " " + (if @verbose then "\n" else "")
-    t = new Tiamat this, "html", @template
+    t = new htx this, "html", @template
     @child_ready = (result) =>
       fs.writeFileSync @dest, result
       console.log (if @hashes then " " else "") + "[" + "done".green + ":" + t.path.blue + "]" if @verbose or @hashes
 
   @help : ->
-    console.log """ usage: tiamat OPTIONS\n
+    console.log """ usage: htx OPTIONS\n
       MANDATORY:
         -t --template      (the entry point to your webapp)
         -d --dest          (the resulting compiled file)
@@ -67,7 +67,7 @@ class Tiamat
         -W --warn-missing\n
       DEPS:
         npm install -g cheerio uglify-js2 uglifycss tidy2\n
-      Tiamat - Website/WebApp Inliner/Compressor
+      htx - Website/WebApp Inliner/Compressor
         c) 2013 anx@ulzq.de - GNU GPLv3 - No warranty!\n
     """; process.exit(0)
 
@@ -106,7 +106,7 @@ class Tiamat
 
     @http_request = @path.indexOf("http") is 0
     @inline       = @path.indexOf("inline") is 0
-    @id           = Tiamat.getid @path
+    @id           = htx.getid @path
 
     if @inline
       @inline_data = @path.substring 7
@@ -154,7 +154,7 @@ class Tiamat
   new_child : (type,url) =>
     @is_ready = false
     # console.log "#{@path.basename()} -> #{url.basename()}"
-    c = new Tiamat @, type, url
+    c = new htx @, type, url
     @child[c.id] = c
     return c.placeholder
 
@@ -274,4 +274,4 @@ class Tiamat
     @on_ready(@result) if typeof @on_ready is "function" 
     @parent.child_ready @result
 
-module.exports = Tiamat
+module.exports = htx

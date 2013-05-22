@@ -1,3 +1,3 @@
 #!/usr/bin/env node
 coffee = require('coffee-script')
-tiamat = require('../src/tiamat.coffee').cli(process.argv)
+htx = require('../src/htx.coffee').cli(process.argv)

@@ -1,10 +1,10 @@
-## Tiamat - website compiler / compressor
+## htx - website compiler / compressor
 
 ### Installation
-    $ sudo npm install -g git://github.com/hakt0r/tiamat.git
+    $ sudo npm install -g git://github.com/hakt0r/htx.git
 
 ### CLI usage
-  $ tiamat -w WEBROOT -t TEMPLATE.html -d /path/to/output
+  $ htx -w WEBROOT -t TEMPLATE.html -d /path/to/output
   * -w : define WEBROOT
   * -t : define TEMPLATE, realtive to WEBROOT
   * -d : path to OUTPUT FILE, can be outside of WEBROOT
@@ -15,8 +15,8 @@
   * -D : debug
 
 ### Node.JS Usage:
-    tiamat = require('tiamat')
-    t = tiamat({
+    htx = require('htx')
+    t = htx({
         "webroot" : "/var/www.tpl",
         "template" : "index.html",
         "dest" : "/var/www/index.html",
